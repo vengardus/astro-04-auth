@@ -7,13 +7,16 @@ import { getAuth } from "firebase/auth";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
+const FIREBASE_API_KEY = import.meta.env.FIREBASE_API_KEY
+const FIREBASE_API_ID = import.meta.env.FIREBASE_API_ID
+
 const firebaseConfig = {
-  apiKey: "AIzaSyAUfHvuNKXbb0ptpRjziojMpAwrxLrQ7-8",
+  apiKey: FIREBASE_API_KEY,
   authDomain: "astro-authentication-ce6a4.firebaseapp.com",
   projectId: "astro-authentication-ce6a4",
   storageBucket: "astro-authentication-ce6a4.appspot.com",
   messagingSenderId: "257766469343",
-  appId: "1:257766469343:web:463e0bcd2c3b1d727bc36a"
+  appId: FIREBASE_API_ID
 };
 
 // Initialize Firebase

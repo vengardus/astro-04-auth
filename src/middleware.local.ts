@@ -22,7 +22,7 @@ const checkLocalAuth = (authHeaders: string | null, next: any) => {
     const decodeValue = atob(authValue).split(":");
     const [user, pass] = decodeValue;
 
-    return next();
+    if (user == "user" && pass == "pass") return next();
   }
   return new Response("Unauthorized", {
     status: 401,
