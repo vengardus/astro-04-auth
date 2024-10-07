@@ -1,5 +1,5 @@
 import type { AstroCookies } from "astro";
-import { createUserWithEmailAndPassword, type AuthError } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile, type AuthError } from "firebase/auth";
 import { firebase } from "src/firebase/config";
 
 export const register = async (
@@ -31,9 +31,19 @@ export const register = async (
       password,
     );
 
-    // Actualiar datos de usuario
+    if ( ! firebase.auth.currentUser )
+      throw new Error("Ocurripo un error al registrar usuario");
+
+    // Actualizar datos de usuario (display name)
+    updateProfile(firebase.auth.currentUser, { 
+      displayName: name,
+      //photoURL: "https://i.pravatar.cc/300"
+    });
 
     // Verificar el correo electronico
+    await sendEmailVerification(firebase.auth.currentUser, {
+      url: "http://localhost:4321/protected?emailVerified=true",
+    });
 
     resp.succes = true;
     //return user;
