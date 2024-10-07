@@ -1,7 +1,8 @@
-import { logoutUser, registerUser } from "./auth/index.action";
+import { loginUser, logoutUser, registerUser } from "./auth/index.action";
 
 export const server = {
     // auth actions
     registerUser,
-    logoutUser
+    logoutUser,
+    loginUser
 }

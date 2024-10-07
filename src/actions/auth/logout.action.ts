@@ -1,16 +1,18 @@
-import { signOut } from "firebase/auth";
+import { signOut, type AuthError } from "firebase/auth";
 import { firebase } from "src/firebase/config";
 
 export const logout = async () => {
-    const resp: { succes: boolean } = {
+    const resp: { succes: boolean, message?: string } = {
         succes: false,
+        message: "",
     }
 
     try {
         await signOut(firebase.auth);
         resp.succes = true;
     } catch (error) {
-        
+        const firebaseError = error as AuthError;
+        resp.message = `Ocurrió un error en la autenticación: ${firebaseError.code}`;
     }
     return resp
 }

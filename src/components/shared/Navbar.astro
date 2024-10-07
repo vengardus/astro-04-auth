@@ -116,15 +116,19 @@ const navBarOptions = NAVBAR_OPTIONS;
 <script src="//unpkg.com/alpinejs" defer></script>
 
 <script>
-import { actions } from "astro:actions";
+  import { actions } from "astro:actions";
 
   const logout = document.querySelector('#logout');
   logout?.addEventListener('click', async() => {
-      console.log('logout');
-      await actions.logoutUser()
-      window.location.href = '/'
+    console.log('logout');
+    const resp = await actions.logoutUser.orThrow()
+          
+    if ( !resp.succes) {
+      console.log("Error en logout", resp.message);
+      return
+    }
+    window.location.href = '/'
   });
-
 </script>
 
 <style>
