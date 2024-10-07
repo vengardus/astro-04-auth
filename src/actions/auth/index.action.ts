@@ -1,6 +1,7 @@
 import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
 import { register } from "./register.action";
+import { logout } from "./logout.action";
 
 export const registerUser = defineAction({
     accept:"form",
@@ -11,4 +12,9 @@ export const registerUser = defineAction({
         rememberMe: z.boolean().optional(),
     }),
     handler: async ({name, email, password, rememberMe}, {cookies}) => register({name, email, password, rememberMe}, cookies),
+})
+
+export const logoutUser = defineAction({
+    accept: "json",
+    handler: async ({}) => logout()
 })

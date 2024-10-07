@@ -21,5 +21,6 @@ export const NAVBAR_OPTIONS: Navbar[] = [
   {
     name: "Salir",
     path: "/auth/logout",
+    label: "logout",
   },
 ];

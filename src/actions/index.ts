@@ -1,6 +1,7 @@
-import { registerUser } from "./auth/index.action";
+import { logoutUser, registerUser } from "./auth/index.action";
 
 export const server = {
-    // autb actions
-    registerUser
+    // auth actions
+    registerUser,
+    logoutUser
 }

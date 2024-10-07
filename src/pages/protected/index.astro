@@ -4,6 +4,8 @@ import { firebase } from "src/firebase/config";
 
 const firebaseUser = firebase.auth.currentUser;
 
+console.log("firebaseUser", firebaseUser);
+
 if (!firebaseUser) {
   return Astro.redirect("/auth/login");
 }
