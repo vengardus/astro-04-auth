@@ -1,15 +1,16 @@
 import type { AstroCookies } from "astro";
-import { AuthErrorCodes, signInWithEmailAndPassword, type AuthError } from "firebase/auth";
+import type { ResponseAction } from "@/interfaces/app/response.interface";
+import { signInWithEmailAndPassword, type AuthError } from "firebase/auth";
 import { firebase } from "src/firebase/config";
+import { initResponseAction } from "@/utils/init-response";
 
 export const login = async (
   data: { email: string; password: string, rememberMe?: boolean },
   cookies: AstroCookies,
-) => {
+):Promise<ResponseAction> => {
   const { email, password, rememberMe } = data;
-  const resp: { succes: boolean; message?: string } = {
-    succes: false,
-  };
+
+  const resp = initResponseAction();
 
   // Cookies
   if (rememberMe) {
@@ -29,7 +30,7 @@ export const login = async (
       email,
       password,
     );
-    resp.succes = user ? true : false;
+    resp.success = user ? true : false;
   } catch (error) {
     const firebaseError = error as AuthError;
     resp.message = `Ocurrió un error en la autenticación: ${firebaseError.code}`;

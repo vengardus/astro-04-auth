@@ -106,7 +106,7 @@ const rememberMe = !!email;
     // ---
 
     const response = await actions.loginUser.orThrow(formData);
-    if (!response.succes) {
+    if (!response.success) {
       Swal.fire({
         icon: "error",
         title: "Credenciales no son correctas",

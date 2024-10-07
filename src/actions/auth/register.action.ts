@@ -1,3 +1,5 @@
+import type { ResponseAction } from "@/interfaces/app/response.interface";
+import { initResponseAction } from "@/utils/init-response";
 import type { AstroCookies } from "astro";
 import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile, type AuthError } from "firebase/auth";
 import { firebase } from "src/firebase/config";
@@ -5,11 +7,10 @@ import { firebase } from "src/firebase/config";
 export const register = async (
   data: { name: string; email: string; password: string; rememberMe?: boolean },
   cookies: AstroCookies,
-): Promise<{ succes: boolean; message?: string }> => {
+): Promise<ResponseAction> => {
   const { name, email, password, rememberMe } = data;
-  const resp: { succes: boolean; message?: string } = {
-    succes: false,
-  };
+  
+  const resp = initResponseAction()
 
   // Cookies
   if (rememberMe) {
@@ -45,7 +46,7 @@ export const register = async (
       url: "http://localhost:4321/protected?emailVerified=true",
     });
 
-    resp.succes = true;
+    resp.success = true;
     //return user;
   } catch (error) {
     console.log(error);
@@ -54,7 +55,6 @@ export const register = async (
       resp.message = "El correo ya existe";
     else
       resp.message = "Ocurripo un error al registrar usuario. Error: " + error; //throw new Error("Ocurripo un error al registrar usuario");
-   
   }
 
   return resp
