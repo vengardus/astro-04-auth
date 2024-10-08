@@ -1,4 +1,5 @@
 import { defineMiddleware } from "astro:middleware";
+import { firebase } from "./firebase/config";
 
 const privateRoutes = ["/protected"];
 
@@ -7,11 +8,10 @@ export const onRequest = defineMiddleware((context, next) => {
   console.log("Middleware executed");
   //console.log(context.url);
 
-  const authHeaders = context.request.headers.get("authorization");
-  console.log("authHeaders", authHeaders);
+  const isLoggedIn = !!firebase.auth.currentUser;
+  const user = firebase.auth.currentUser;
 
-  if (privateRoutes.includes(context.url.pathname))
-    return checkLocalAuth(authHeaders, next);
+  context.locals.isLoggedIn = isLoggedIn;   // definida en env.d.ts
 
   return next();
 });

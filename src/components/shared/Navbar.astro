@@ -3,6 +3,9 @@ import { NAVBAR_OPTIONS } from "@/config/constants";
 
 const currentPath = Astro.url.pathname;
 const navBarOptions = NAVBAR_OPTIONS;
+
+//console.log(Astro.locals) 
+const {isLoggedIn} = Astro.locals;
 ---
 
 <nav class="bg-gray-800 text-white" x-data="{ openMobileMenu: false, openSubMenu: false }">
@@ -16,9 +19,16 @@ const navBarOptions = NAVBAR_OPTIONS;
           <div class="ml-10 flex items-baseline space-x-7">
             {
               navBarOptions.map((item) => (
-                <div>
+                  (isLoggedIn && item.label == "login")
+                  ? <></>
+                  :(!isLoggedIn && item.label == "logout" )
+                  ? <></>
+                  :(!isLoggedIn && item.label == "protected")
+                  ? <></>
+                : <div>
                   {
-                    !item.options
+
+                    !item.options 
                     ? (
                       item.label && item.label == "logout"
                       ?<a href="#" id="logout" class="px-3 py-2 rounded-md text-base font-medium hover:text-blue-500">{item.name}</a>
@@ -87,8 +97,17 @@ const navBarOptions = NAVBAR_OPTIONS;
       
       {
         navBarOptions.map((item) => (
-          !item.options
-          ? <a href={item.path} class="block px-3 py-2 rounded-md text-base font-medium hover:text-blue-500" @click="openMobileMenu = false">{item.name}</a>
+          (isLoggedIn && item.label == "login")
+          ? <></>
+          :(!isLoggedIn && (item.label == "logout" || item.label == "protected"))
+          ? <></>
+
+          :!item.options
+          ? (
+            item.label && item.label == "logout"
+            ? <a href="#" id="logout-mobile" class="block px-3 py-2 rounded-md text-base font-medium hover:text-blue-500" @click="openMobileMenu = false">{item.name}</a>
+            : <a href={item.path} class="block px-3 py-2 rounded-md text-base font-medium hover:text-blue-500" @click="openMobileMenu = false">{item.name}</a>
+          )
           : (
             <div x-data="{ open: false }">
               <button @click="open = !open" class="w-full text-left px-3 py-2 rounded-md text-base font-medium hover:text-blue-500 flex items-center">
@@ -119,8 +138,20 @@ const navBarOptions = NAVBAR_OPTIONS;
   import { actions } from "astro:actions";
 
   const logout = document.querySelector('#logout');
+  const logout_mobile = document.querySelector('#logout-mobile');
   logout?.addEventListener('click', async() => {
     console.log('logout');
+    const resp = await actions.logoutUser.orThrow()
+          
+    if ( !resp.success) {
+      console.log("Error en logout", resp.message);
+      return
+    }
+    window.location.href = '/'
+  });
+
+  logout_mobile?.addEventListener('click', async() => {
+    console.log('logout-mobile');
     const resp = await actions.logoutUser.orThrow()
           
     if ( !resp.success) {

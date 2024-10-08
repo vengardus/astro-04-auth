@@ -13,10 +13,12 @@ export const NAVBAR_OPTIONS: Navbar[] = [
   {
     name: "Protegido",
     path: "/protected",
+    label: "protected",
   },
   {
     name: "Ingresar",
     path: "/auth/login",
+    label: "login",
   },
   {
     name: "Salir",
