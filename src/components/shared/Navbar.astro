@@ -25,14 +25,16 @@ const {isLoggedIn} = Astro.locals;
                   ? <></>
                   :(!isLoggedIn && item.label == "protected")
                   ? <></>
-                : <div>
+                : 
+                <div>
                   {
 
                     !item.options 
                     ? (
                       item.label && item.label == "logout"
                       ?<a href="#" id="logout" class="px-3 py-2 rounded-md text-base font-medium hover:text-blue-500">{item.name}</a>
-                      :<a href={item.path} class="px-3 py-2 rounded-md text-base font-medium hover:text-blue-500">{item.name}</a>
+                      :
+                      <a href={item.path} class="px-3 py-2 rounded-md text-base font-medium hover:text-blue-500">{item.name}</a>
                     ) 
                     : (
                       // Sub-Opcionts
@@ -94,7 +96,6 @@ const {isLoggedIn} = Astro.locals;
   <!-- Mobile menu -->
   <div x-show="openMobileMenu" x-cloak class="md:hidden">
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-      
       {
         navBarOptions.map((item) => (
           (isLoggedIn && item.label == "login")
@@ -131,36 +132,70 @@ const {isLoggedIn} = Astro.locals;
   </div>
 </nav>
 
-<!-- Script -->
-<script src="//unpkg.com/alpinejs" defer></script>
 
 <script>
   import { actions } from "astro:actions";
+  import Swal from "sweetalert2";
 
-  const logout = document.querySelector('#logout');
-  const logout_mobile = document.querySelector('#logout-mobile');
-  logout?.addEventListener('click', async() => {
-    console.log('logout');
-    const resp = await actions.logoutUser.orThrow()
-          
-    if ( !resp.success) {
-      console.log("Error en logout", resp.message);
-      return
+  function setupLogoutHandlers() {
+    const logout = document.querySelector('#logout');
+    const logout_mobile = document.querySelector('#logout-mobile');
+    
+    if (logout) {
+      logout.addEventListener('click', async() => {
+        console.log('logout');
+        const resp = await actions.logoutUser.orThrow();
+        
+        if (!resp.success) {
+          Swal.fire({
+            icon: "error",
+            title: "Error al hacer logout",
+            text: resp.message,
+          });
+          return;
+        }
+        window.location.href = '/';
+      });
     }
-    window.location.href = '/'
-  });
 
-  logout_mobile?.addEventListener('click', async() => {
-    console.log('logout-mobile');
-    const resp = await actions.logoutUser.orThrow()
-          
-    if ( !resp.success) {
-      console.log("Error en logout", resp.message);
-      return
+    if (logout_mobile) {
+      logout_mobile.addEventListener('click', async() => {
+        console.log('logout-mobile');
+        const resp = await actions.logoutUser.orThrow();
+        
+        if (!resp.success) {
+          Swal.fire({
+            icon: "error",
+            title: "Error al hacer logout",
+            text: resp.message,
+          });
+          return;
+        }
+        window.location.href = '/';
+      });
     }
-    window.location.href = '/'
+  }
+
+  function observeDOMChanges() {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.addedNodes.length || mutation.removedNodes.length) {
+          setupLogoutHandlers();
+        }
+      });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    setupLogoutHandlers();
+    observeDOMChanges();
   });
 </script>
+
+
+  <script src="//unpkg.com/alpinejs" defer></script>
 
 <style>
   /* Estilos adicionales si son necesarios */
