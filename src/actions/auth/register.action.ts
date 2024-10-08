@@ -26,7 +26,7 @@ export const register = async (
 
   // Creación de usuario
   try {
-    const user = await createUserWithEmailAndPassword(
+    await createUserWithEmailAndPassword(
       firebase.auth,
       email,
       password,

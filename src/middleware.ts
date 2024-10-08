@@ -33,20 +33,4 @@ export const onRequest = defineMiddleware((context, next) => {
   return next();
 });
 
-const checkLocalAuth = (authHeaders: string | null, next: any) => {
-  if (authHeaders) {
-    const authValue = authHeaders.split(" ").at(-1) ?? "user:pass";
-    const decodeValue = atob(authValue).split(":");
-    const [user, pass] = decodeValue;
 
-    return next();
-  }
-  // return new Response("Unauthorized", {
-  //   status: 401,
-  //   headers: {
-  //     "WWW-Authenticate": 'Basic realm="Secure Area"',
-  //   },
-
-  // });
-  return next();
-};

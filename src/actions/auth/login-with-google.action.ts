@@ -8,7 +8,7 @@ export const loginWithGoogle = async (credentials:any): Promise<ResponseAction> 
     const resp = initResponseAction();
 
     try {
-        const credential = await GoogleAuthProvider.credentialFromResult(credentials);
+        const credential = GoogleAuthProvider.credentialFromResult(credentials);
         
         if ( ! credential )
             throw new Error("No se pudo autenticar con Google. Google SIgnIn falló");
