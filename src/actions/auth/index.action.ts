@@ -3,6 +3,7 @@ import { z } from "astro:schema";
 import { register } from "./register.action";
 import { logout } from "./logout.action";
 import { login } from "./login.action";
+import { loginWithGoogle } from "./login-with-google.action";
 
 export const registerUser = defineAction({
     accept:"form",
@@ -29,3 +30,10 @@ export const loginUser = defineAction({
     }),
     handler: async ({email, password, rememberMe}, {cookies}) => login({email, password, rememberMe}, cookies)
 })
+
+export const loginUserWithGoogle = defineAction({
+    accept: "json",
+    input: z.any(),
+    handler: async (credentials) => loginWithGoogle(credentials)
+})  
+
