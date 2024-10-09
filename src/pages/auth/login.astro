@@ -136,6 +136,8 @@ const rememberMe = !!email;
   btnGoogle.addEventListener("click", async () => {
     btnGoogle.setAttribute("disabled", "disabled");
     
+    console.log("btnGoogle");
+
     const provider = new GoogleAuthProvider();
     try {
 
@@ -144,6 +146,8 @@ const rememberMe = !!email;
         const apikey = resp.data
         const resp2 = await actions.getEnv.orThrow({key:"FIREBASE_API_ID"})
         const apiId = resp2.data
+
+        console.log('KEYS', apikey, apiId)
 
         // Paso 1: OIbtener credenciales del lado del cliente
         const credentials = await signInWithPopup(firebaseClient(apikey, apiId).auth, provider);

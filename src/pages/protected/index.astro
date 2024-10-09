@@ -1,5 +1,6 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
+import { firebase } from "src/firebase/config";
 //import { firebase } from "src/firebase/config";
 
 const {user} = Astro.locals     // se obtiene de env.d.ts
@@ -11,9 +12,9 @@ const {user} = Astro.locals     // se obtiene de env.d.ts
 
 const { name, email, photoURL, emailVerified } = user!;
 
-/*
+
 const firebaseUser = firebase.auth.currentUser;
-console.log("firebaseUser", firebaseUser?.email);
+//console.log("firebaseUser", firebaseUser?.email);
 
 if (!firebaseUser) {
   return Astro.redirect("/auth/login");
@@ -21,10 +22,10 @@ if (!firebaseUser) {
 
 await firebaseUser.reload();
 
-const { displayName, email, photoURL, emailVerified } = firebaseUser;
+//const { displayName, email, photoURL, emailVerified } = firebaseUser;
 
-const name = displayName ?? "No display name";
-*/
+//const name = displayName ?? "No display name";
+
 ---
 
 <MainLayout title="Vengardus - Protected">
