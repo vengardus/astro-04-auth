@@ -133,69 +133,67 @@ const {isLoggedIn} = Astro.locals;
 </nav>
 
 
+
 <script>
   import { actions } from "astro:actions";
   import Swal from "sweetalert2";
 
-  function setupLogoutHandlers() {
-    const logout = document.querySelector('#logout');
-    const logout_mobile = document.querySelector('#logout-mobile');
-    
-    if (logout) {
-      logout.addEventListener('click', async() => {
-        console.log('logout');
-        const resp = await actions.logoutUser.orThrow();
-        
-        if (!resp.success) {
-          Swal.fire({
-            icon: "error",
-            title: "Error al hacer logout",
-            text: resp.message,
-          });
-          return;
-        }
+  function handleLogout(event: Event) {
+    event.preventDefault();  // Prevenir comportamiento por defecto
+    actions.logoutUser.orThrow().then(resp => {
+      console.log('Ejecutando logout');
+      if (!resp.success) {
+        Swal.fire({
+          icon: "error",
+          title: "Error al hacer logout",
+          text: resp.message,
+        });
+      } else {
         window.location.href = '/';
-      });
-    }
-
-    if (logout_mobile) {
-      logout_mobile.addEventListener('click', async() => {
-        console.log('logout-mobile');
-        const resp = await actions.logoutUser.orThrow();
-        
-        if (!resp.success) {
-          Swal.fire({
-            icon: "error",
-            title: "Error al hacer logout",
-            text: resp.message,
-          });
-          return;
-        }
-        window.location.href = '/';
-      });
-    }
+      }
+    }).catch(error => {
+      console.error('Error:', error);
+    });
   }
 
-  function observeDOMChanges() {
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.addedNodes.length || mutation.removedNodes.length) {
-          setupLogoutHandlers();
-        }
-      });
-    });
+  function setupLogoutHandlers(entries: IntersectionObserverEntry[], observer: IntersectionObserver) {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const logout = entry.target.querySelector('#logout');
+        const logout_mobile = entry.target.querySelector('#logout-mobile');
 
-    observer.observe(document.body, { childList: true, subtree: true });
+        if (logout) {
+          logout.removeEventListener('click', handleLogout);
+          logout.addEventListener('click', handleLogout);
+        }
+
+        if (logout_mobile) {
+          logout_mobile.removeEventListener('click', handleLogout);
+          logout_mobile.addEventListener('click', handleLogout);
+        }
+        
+        observer.unobserve(entry.target);  // Dejar de observar una vez configurado
+      }
+    });
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    setupLogoutHandlers();
-    observeDOMChanges();
+    const observer = new IntersectionObserver(setupLogoutHandlers, { threshold: 0.1 });
+
+    // Observar las secciones relevantes del DOM
+    observer.observe(document.body);
+
+    document.addEventListener('astro:afterRender', () => {
+      observer.observe(document.body);
+    });
   });
 </script>
 
+<script src="//unpkg.com/alpinejs" defer></script>
 
-  <script src="//unpkg.com/alpinejs" defer></script>
+
+
+
 
 <style>
   /* Estilos adicionales si son necesarios */

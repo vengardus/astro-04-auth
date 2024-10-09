@@ -16,6 +16,11 @@ export const NAVBAR_OPTIONS: Navbar[] = [
     label: "protected",
   },
   {
+    name: "Clientes",
+    path: "/clients",
+    //label: "protected",
+  },
+  {
     name: "Ingresar",
     path: "/auth/login",
     label: "login",
